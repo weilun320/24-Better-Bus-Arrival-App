@@ -27,7 +27,21 @@
   </div>
   <div class="p-3 p-lg-5">
     <div class="container">
-      <p class="fs-4" id="bus-stop-number"></p>
+      <div class="row mb-2">
+        <div class="col-6 col-md-4 col-xl-3">
+          <p class="fs-4" id="bus-stop-number"></p>
+        </div>
+        <div class="col-6 col-md-4 col-xl-3">
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Filter by Bus No.
+            </button>
+            <ul class="dropdown-menu" id="bus-number-dropdown">
+              
+            </ul>
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col fw-bold border">Bus No.</div>
         <div class="col fw-bold border">Next Bus (ETA)</div>

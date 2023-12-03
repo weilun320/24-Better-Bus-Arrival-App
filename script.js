@@ -1,6 +1,8 @@
 const busArrivalInfo = document.getElementById("bus-arrival-info");
 const busStopNumber = document.getElementById("bus-stop-number");
-const filterBusNumber = document.getElementById("filter-bus-number");
+const busNumberDropdown = document.getElementById("bus-number-dropdown");
+let busStopId;
+let filteredBusNo;
 
 // Fetch bus arrival data from API based on user's input
 async function getArrivalData(busStopId) {
@@ -11,15 +13,19 @@ async function getArrivalData(busStopId) {
 }
 
 // Format buses info into a readable format
-function formatArrivalData(arrivalData) {
-  const buses = arrivalData.services;
+function formatArrivalData(arrivalData, busNo) {
+  let buses = arrivalData.services;
   const formattedData = [];
+
+  if (busNo) {
+    buses = buses.filter(bus => bus.no === busNo);
+  }
 
   for (const bus of buses) {
     const nextBus = bus.next;
     const next2Bus = bus.next2;
     const next3Bus = bus.next3;
-    
+
     formattedData.push(`
       <div class="row">
         <div class="col border">${bus.no}</div>
@@ -33,33 +39,67 @@ function formatArrivalData(arrivalData) {
   return formattedData.join("");
 }
 
+function formatBusNumberDropdown(arrivalData) {
+  const buses = arrivalData.services;
+  const busNumber = [];
+
+  for (const bus of buses) {
+    busNumber.push(`
+      <li><button class="dropdown-item" onclick="filterBusNo('${bus.no}')">Bus No. ${bus.no}</button></li>
+    `);
+  }
+
+  return busNumber.join("");
+}
+
 // Display bus arrival data on the webpage
 function displayArrivalData(busStopId) {
   getArrivalData(busStopId)
-  .then(arrivalData => {
-    const formattedArrivalData = formatArrivalData(arrivalData);
+    .then(arrivalData => {
+      let formattedArrivalData;
+      const formattedBusNumber = formatBusNumberDropdown(arrivalData);
+      
+      if (filteredBusNo) {
+        formattedArrivalData = formatArrivalData(arrivalData, filteredBusNo);
+      }
+      else {
+        formattedArrivalData = formatArrivalData(arrivalData);
+      }
 
-    busArrivalInfo.innerHTML = formattedArrivalData;
-  })
-  .catch(error => {
-    busArrivalInfo.innerHTML = `Error fetching bus arrival data: ${error}`;
-  });
+      if (formattedArrivalData) {
+        busArrivalInfo.innerHTML = formattedArrivalData;
+        busStopNumber.innerHTML = `Bus Stop No.: ${busStopId}`;
+      }
+      else {
+        busArrivalInfo.innerHTML = "No buses found for this bus stop.";
+        document.getElementById("bus-stop-id").value = "";
+      }
+
+      busNumberDropdown.innerHTML = formattedBusNumber;
+    })
+    .catch(error => {
+      busArrivalInfo.innerHTML = `Error fetching bus arrival data`;
+    });
 }
 
 // Search bus info based on user's input
 function searchBusInfo() {
   const busStopIdInput = document.getElementById("bus-stop-id");
-  const busStopId = busStopIdInput.value;
+  busStopId = busStopIdInput.value;
 
-  busStopNumber.innerHTML = `Bus Stop No.: ${busStopId}`;
+  if (!busStopId) {
+    alert("Please enter a bus stop ID.");
+    return;
+  }
+
+  filteredBusNo = null;
   displayArrivalData(busStopId);
-  busStopIdInput.value = "";
 }
 
 // Format time in milliseconds to minutes
 function formatTime(time) {
   time = Math.ceil(time / 60000);
-  
+
   if (time > 1) {
     return `${time} mins`;
   }
@@ -69,4 +109,9 @@ function formatTime(time) {
   else {
     return "Arriving soon...";
   }
+}
+
+function filterBusNo(busNo) {
+  filteredBusNo = busNo;
+  displayArrivalData(busStopId);
 }
