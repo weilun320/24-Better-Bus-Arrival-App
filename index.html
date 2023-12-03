@@ -29,18 +29,21 @@
   <div class="p-3">
     <div class="container">
       <div class="row mb-2">
-        <div class="col-6 col-md-4 col-xl-3">
+        <div class="col-12 col-md-4 col-xl-3">
           <p class="fs-4" id="bus-stop-number"></p>
         </div>
         <div class="col-6 col-md-4 col-xl-3">
           <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Filter by Bus No.
             </button>
             <ul class="dropdown-menu" id="bus-number-dropdown">
               
             </ul>
           </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-3">
+          <button class="btn" onclick="resetFilter()" type="reset">Reset Filter</button>
         </div>
       </div>
       <div class="row">

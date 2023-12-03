@@ -95,6 +95,7 @@ function searchBusInfo() {
   }
 
   busNotFound.innerHTML = "";
+  busStopIdInput.value = "";
   filteredBusNo = null;
   displayArrivalData(busStopId);
 }
@@ -117,5 +118,11 @@ function formatTime(time) {
 // Filter bus no. based on user's selection
 function filterBusNo(busNo) {
   filteredBusNo = busNo;
+  displayArrivalData(busStopId);
+}
+
+// Reset bus no. filter
+function resetFilter() {
+  filteredBusNo = null;
   displayArrivalData(busStopId);
 }
