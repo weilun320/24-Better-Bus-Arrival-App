@@ -6,9 +6,36 @@
   <meta name="viewport" content="width=device-width">
   <title>Bus Arrival App</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
 
 <body>
+  <div class="p-3 p-lg-5">
+    <div class="container">
+      <h2 class="fs-2 mb-3">Bus Arrival App</h2>
+      <div class="row">
+        <div class="col-auto">
+          <input autofocus class="form-control" id="bus-stop-id" placeholder="Enter Bus Stop Number" type="text">
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-primary" onclick="searchBusInfo()" type="submit">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="p-3 p-lg-5">
+    <div class="container">
+      <p id="bus-stop-number"></p>
+      <div class="row">
+        <div class="col fs-5 fw-bold border">Bus No.</div>
+        <div class="col fs-5 fw-bold border">Next Bus (ETA)</div>
+      </div>
+      <div id="bus-arrival-info"></div> 
+    </div>
+  </div>
+  
   <script src="script.js"></script>
 </body>
 
