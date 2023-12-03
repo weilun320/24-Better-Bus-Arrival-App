@@ -1,6 +1,7 @@
 const busArrivalInfo = document.getElementById("bus-arrival-info");
 const busStopNumber = document.getElementById("bus-stop-number");
 const busNumberDropdown = document.getElementById("bus-number-dropdown");
+const busNotFound = document.getElementById("bus-not-found");
 let busStopId;
 let filteredBusNo;
 
@@ -39,6 +40,7 @@ function formatArrivalData(arrivalData, busNo) {
   return formattedData.join("");
 }
 
+// Format bus no. dropdown options
 function formatBusNumberDropdown(arrivalData) {
   const buses = arrivalData.services;
   const busNumber = [];
@@ -71,14 +73,14 @@ function displayArrivalData(busStopId) {
         busStopNumber.innerHTML = `Bus Stop No.: ${busStopId}`;
       }
       else {
-        busArrivalInfo.innerHTML = "No buses found for this bus stop.";
+        busNotFound.innerHTML = `No buses found for this bus stop ID: ${busStopId}.`;
         document.getElementById("bus-stop-id").value = "";
       }
 
       busNumberDropdown.innerHTML = formattedBusNumber;
     })
     .catch(error => {
-      busArrivalInfo.innerHTML = `Error fetching bus arrival data`;
+      busNotFound.innerHTML = `Error fetching bus arrival data`;
     });
 }
 
@@ -88,10 +90,11 @@ function searchBusInfo() {
   busStopId = busStopIdInput.value;
 
   if (!busStopId) {
-    alert("Please enter a bus stop ID.");
+    busNotFound.innerHTML = "Please enter a bus stop ID.";
     return;
   }
 
+  busNotFound.innerHTML = "";
   filteredBusNo = null;
   displayArrivalData(busStopId);
 }
@@ -111,6 +114,7 @@ function formatTime(time) {
   }
 }
 
+// Filter bus no. based on user's selection
 function filterBusNo(busNo) {
   filteredBusNo = busNo;
   displayArrivalData(busStopId);
