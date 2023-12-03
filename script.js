@@ -1,3 +1,4 @@
+const busStopIdInput = document.getElementById("bus-stop-id");
 const busArrivalInfo = document.getElementById("bus-arrival-info");
 const busStopNumber = document.getElementById("bus-stop-number");
 const busNumberDropdown = document.getElementById("bus-number-dropdown");
@@ -86,7 +87,6 @@ function displayArrivalData(busStopId) {
 
 // Search bus info based on user's input
 function searchBusInfo() {
-  const busStopIdInput = document.getElementById("bus-stop-id");
   busStopId = busStopIdInput.value;
 
   if (!busStopId) {
@@ -126,3 +126,13 @@ function resetFilter() {
   filteredBusNo = null;
   displayArrivalData(busStopId);
 }
+
+// Event listener for search button
+busStopIdInput.addEventListener("keydown", (e) => {
+  e.preventDefault;
+
+  // User may search for bus info by pressing enter
+  if (e.key === "Enter") {
+    searchBusInfo();
+  }
+});
