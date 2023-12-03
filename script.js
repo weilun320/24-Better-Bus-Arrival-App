@@ -1,5 +1,6 @@
 const busArrivalInfo = document.getElementById("bus-arrival-info");
 const busStopNumber = document.getElementById("bus-stop-number");
+const filterBusNumber = document.getElementById("filter-bus-number");
 
 // Fetch bus arrival data from API based on user's input
 async function getArrivalData(busStopId) {
@@ -16,10 +17,15 @@ function formatArrivalData(arrivalData) {
 
   for (const bus of buses) {
     const nextBus = bus.next;
+    const next2Bus = bus.next2;
+    const next3Bus = bus.next3;
+    
     formattedData.push(`
       <div class="row">
         <div class="col border">${bus.no}</div>
-        <div class="col border">${formatTime(nextBus.duration_ms)}</div>
+        <div class="col border">${(nextBus) ? formatTime(nextBus.duration_ms) : "N/A"}</div>
+        <div class="col border">${(next2Bus) ? formatTime(next2Bus.duration_ms) : "N/A"}</div>
+        <div class="col border">${(next3Bus) ? formatTime(next3Bus.duration_ms) : "N/A"}</div>
       </div>
     `);
   }
@@ -36,7 +42,7 @@ function displayArrivalData(busStopId) {
     busArrivalInfo.innerHTML = formattedArrivalData;
   })
   .catch(error => {
-    busArrivalInfoContainer.innerHTML = `Error fetching bus arrival data: ${error}`;
+    busArrivalInfo.innerHTML = `Error fetching bus arrival data: ${error}`;
   });
 }
 
@@ -45,7 +51,7 @@ function searchBusInfo() {
   const busStopIdInput = document.getElementById("bus-stop-id");
   const busStopId = busStopIdInput.value;
 
-  busStopNumber.innerHTML = `Bus Stop Number: ${busStopId}`;
+  busStopNumber.innerHTML = `Bus Stop No.: ${busStopId}`;
   displayArrivalData(busStopId);
   busStopIdInput.value = "";
 }

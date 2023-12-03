@@ -17,7 +17,7 @@
       <h2 class="fs-2 mb-3">Bus Arrival App</h2>
       <div class="row">
         <div class="col-auto">
-          <input autofocus class="form-control" id="bus-stop-id" placeholder="Enter Bus Stop Number" type="text">
+          <input autofocus class="form-control" id="bus-stop-id" placeholder="Bus Stop No." type="text">
         </div>
         <div class="col-auto">
           <button class="btn btn-primary" onclick="searchBusInfo()" type="submit">Search</button>
@@ -27,10 +27,12 @@
   </div>
   <div class="p-3 p-lg-5">
     <div class="container">
-      <p id="bus-stop-number"></p>
+      <p class="fs-4" id="bus-stop-number"></p>
       <div class="row">
-        <div class="col fs-5 fw-bold border">Bus No.</div>
-        <div class="col fs-5 fw-bold border">Next Bus (ETA)</div>
+        <div class="col fw-bold border">Bus No.</div>
+        <div class="col fw-bold border">Next Bus (ETA)</div>
+        <div class="col fw-bold border">Next 2nd Bus (ETA)</div>
+        <div class="col fw-bold border">Next 3rd Bus (ETA)</div>
       </div>
       <div id="bus-arrival-info"></div> 
     </div>
