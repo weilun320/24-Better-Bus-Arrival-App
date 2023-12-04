@@ -188,6 +188,24 @@ function removeActive() {
   }
 }
 
+// Display current time
+function currentTime() {
+  const currentTime = document.getElementById("current-time");
+  setInterval(() => {
+    const date = new Date();
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+
+    currentTime.innerHTML = `Current time: ${hours}:${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}${ampm}`;
+    
+  }, 1000);
+}
+
+currentTime();
+
 // Handle input event for bus stop ID
 busStopIdInput.addEventListener("input", (e) => {
   value = e.target.value;
