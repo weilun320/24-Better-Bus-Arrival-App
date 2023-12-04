@@ -7,6 +7,7 @@ const busNotFound = document.getElementById("bus-not-found");
 let busStopId;
 let filteredBusNo;
 let currentFocus;
+let intervalId = null;
 
 // Fetch bus arrival data from API based on user's input
 async function getArrivalData(busStopId) {
@@ -59,7 +60,47 @@ function formatBusNumberDropdown(arrivalData) {
 
 // Display bus arrival data on the webpage
 function displayArrivalData(busStopId) {
+  // Clear previous interval
+  if (intervalId) {
+    clearInterval(intervalId);
+  }
+
+  // Fetch data immediately for first time
   getArrivalData(busStopId)
+  .then(arrivalData => {
+    let formattedArrivalData;
+    const formattedBusNumber = formatBusNumberDropdown(arrivalData);
+
+    // Check if bus number is selected to filter
+    if (filteredBusNo) {
+      formattedArrivalData = formatArrivalData(arrivalData, filteredBusNo);
+    }
+    else {
+      formattedArrivalData = formatArrivalData(arrivalData);
+    }
+
+    // Display bus arrival data if bus arrival data is found
+    if (formattedArrivalData) {
+      busArrivalInfo.innerHTML = formattedArrivalData;
+      busStopNumber.innerHTML = `Bus Stop No.: <strong>${busStopId}</strong>`;
+      busNumberDropdown.innerHTML = formattedBusNumber;
+      document.querySelectorAll(".btn-disabled").forEach(btn => btn.disabled = false);
+    }
+    // Display bus not found message if bus arrival data is not found
+    else {
+      busNotFound.innerHTML = `No buses found for this bus stop ID: ${busStopId}.`;
+      busArrivalInfo.innerHTML = "";
+      busStopNumber.innerHTML = "";
+      document.getElementById("bus-stop-id").value = "";
+    }
+  })
+  .catch(error => {
+    busNotFound.innerHTML = `Error fetching bus arrival data`;
+  });
+
+  // Update bus arrival data every 15seconds
+  intervalId = setInterval(() => {
+    getArrivalData(busStopId)
     .then(arrivalData => {
       let formattedArrivalData;
       const formattedBusNumber = formatBusNumberDropdown(arrivalData);
@@ -90,6 +131,7 @@ function displayArrivalData(busStopId) {
     .catch(error => {
       busNotFound.innerHTML = `Error fetching bus arrival data`;
     });
+  }, 15000);
 }
 
 // Search bus info based on user's input
@@ -154,6 +196,28 @@ function setBusStopId(id) {
   busStopIdInput.value = id;
 }
 
+function showAutocomplete(idAutocomplete, idCounter, busStopIds, value) {
+  // Hide autocomplete dropdown if input is empty
+  if (!value) {
+    idAutocomplete.style.display = "none";
+    return;
+  }
+
+  // Add autocomplete dropdown item if input matches valid bus stop ID
+  for (const id of busStopIds) {
+    // Limit dropdown item to first 10 bus stop ID
+    if (id.substr(0, value.length) === value && idCounter < 10) {
+      idAutocomplete.innerHTML += `<li><button class="autocomplete-btn" onclick="setBusStopId('${id}')">${id}</button></li>`;
+      idCounter++;
+    }
+  }
+
+  // Show autocomplete dropdown if dropdown item existed
+  if (idAutocomplete.hasChildNodes()) {
+    idAutocomplete.style.display = "block";
+  }
+}
+
 // Autocomplete bus stop ID
 function autocomplete() {
   const idAutocomplete = document.getElementById("id-autocomplete");
@@ -169,34 +233,24 @@ function autocomplete() {
     console.error(error);
   });
 
+  // Handle focus event for bus stop ID
+  busStopIdInput.addEventListener("focus", (e) => {
+    let value = e.target.value;
+
+    showAutocomplete(idAutocomplete, idCounter, busStopIds, value);
+    addActive(idAutocomplete);
+  });
+
   // Handle input event for bus stop ID
   busStopIdInput.addEventListener("input", (e) => {
-    value = e.target.value;
+    let value = e.target.value;
 
     // Set initial value
     idAutocomplete.innerHTML = "";
     idCounter = 0;
     currentFocus = -1;
 
-    // Hide autocomplete dropdown if input is empty
-    if (!value) {
-      idAutocomplete.style.display = "none";
-      return;
-    }
-
-    // Add autocomplete dropdown item if input matches valid bus stop ID
-    for (const id of busStopIds) {
-      // Limit dropdown item to first 10 bus stop ID
-      if (id.substr(0, value.length) === value && idCounter < 10) {
-        idAutocomplete.innerHTML += `<li><button class="autocomplete-btn" onclick="setBusStopId('${id}')">${id}</button></li>`;
-        idCounter++;
-      }
-    }
-
-    // Show autocomplete dropdown if dropdown item existed
-    if (idAutocomplete.hasChildNodes()) {
-      idAutocomplete.style.display = "block";
-    }
+    showAutocomplete(idAutocomplete, idCounter, busStopIds, value);
   });
 
   // Handle keydown event for autocomplete dropdown
@@ -205,13 +259,13 @@ function autocomplete() {
     if (e.key === "ArrowUp") {
       currentFocus--;
 
-      addActive(idAutocomplete);
+      busStopIdInput.value = addActive(idAutocomplete);
     }
     // Move active item downward if down arrow key is pressed
     else if (e.key === "ArrowDown") {
       currentFocus++;
 
-      addActive(idAutocomplete);
+      busStopIdInput.value = addActive(idAutocomplete);
     }
     // Select active item if enter key is pressed and search for bus arrival time
     else if (e.key === "Enter") {
@@ -227,8 +281,11 @@ function autocomplete() {
   });
 
   // Hide autocomplete dropdown when user clicks outside of it
-  document.addEventListener("click", () => {
-    idAutocomplete.style.display = "none";
+  document.addEventListener("click", (e) => {
+    if (e.target !== busStopIdInput) {
+      idAutocomplete.style.display = "none";
+      removeActive(idAutocomplete);
+    }
   });
 }
 
@@ -246,6 +303,8 @@ function addActive(idAutocomplete) {
 
   // Add active class to selected dropdown item
   idAutocomplete.children[currentFocus].children[0].classList.add("active");
+
+  return idAutocomplete.children[currentFocus].children[0].textContent;
 }
 
 // Remove background color from dropdown item
