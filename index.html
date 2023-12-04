@@ -12,9 +12,10 @@
 </head>
 
 <body>
-  <div class="p-3 py-lg-5">
-    <div class="container">
-      <h2 class="fs-2 mb-3">Bus Arrival App</h2>
+  <div class="m-3 m-lg-5 py-3 bg-light bg-opacity-75 rounded-3">
+    <div class="container-fluid pb-5">
+      <h1 class="mb-2">Bus Arrival App</h1>
+      <p class="fw-semibold">Find out for estimated time of arrival(ETA) of your next bus in Singapore!</p>
       <div class="row mb-2">
         <div class="col-auto">
           <input autofocus class="form-control" id="bus-stop-id" placeholder="Bus Stop No." type="text">
@@ -27,16 +28,14 @@
       </div>
       <p class="text-danger" id="bus-not-found"></p>
     </div>
-  </div>
-  <div class="p-3">
-    <div class="container">
+    <div class="container-fluid pt-5 pb-3">
       <div class="row mb-2">
         <div class="col-12 col-md-4 col-xl-3">
-          <p class="fs-4" id="bus-stop-number"></p>
+          <p class="fs-4" id="bus-stop-number">Bus Stop No.:</p>
         </div>
         <div class="col-6 col-md-4 col-xl-3">
           <div class="dropdown">
-            <button class="btn btn-outline-secondary btn-disabled dropdown-toggle" disabled type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-secondary btn-disabled dropdown-toggle" disabled type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Filter by Bus No.
             </button>
             <ul class="dropdown-menu" id="bus-number-dropdown">
@@ -45,18 +44,25 @@
           </div>
         </div>
         <div class="col-6 col-md-4 col-xl-3">
-          <button class="btn btn-disabled" disabled onclick="clearFilter()" type="reset">Clear Filter</button>
+          <button class="btn btn-light shadow btn-disabled" disabled onclick="clearFilter()" type="reset">Clear Filter</button>
+        </div>
+      </div>
+      <div class="row align-items-center mb-3">
+        <div class="col">
+          <p class="m-0">Bus arrival info provided by ArriveLah.</p>
         </div>
       </div>
       <div class="row">
-        <div class="col bg-primary-subtle fw-bold border">Bus No.</div>
-        <div class="col bg-primary-subtle fw-bold border">Next Bus (ETA)</div>
-        <div class="col bg-primary-subtle fw-bold border">Next 2nd Bus (ETA)</div>
-        <div class="col bg-primary-subtle fw-bold border">Next 3rd Bus (ETA)</div>
+        <div class="col py-1 bg-info fw-bold border">Bus No.</div>
+        <div class="col py-1 bg-info fw-bold border">Next Bus (ETA)</div>
+        <div class="col py-1 bg-info fw-bold border">Next 2nd Bus (ETA)</div>
+        <div class="col py-1 bg-info fw-bold border">Next 3rd Bus (ETA)</div>
       </div>
       <div id="bus-arrival-info"></div> 
     </div>
   </div>
+
+  <footer class="mt-5 p-3 text-light text-center">&copy; 2023 Wei Lun. All right reserved.</footer>
   
   <script src="script.js"></script>
 </body>

@@ -58,10 +58,10 @@ function formatArrivalData(arrivalData, busNo) {
 
     formattedData.push(`
       <div class="row">
-        <div class="col bg-secondary-subtle border border-light">${bus.no}</div>
-        <div class="col bg-secondary-subtle border border-light">${(nextBus) ? formatTime(nextBus.duration_ms) : "N/A"}</div>
-        <div class="col bg-secondary-subtle border border-light">${(next2Bus) ? formatTime(next2Bus.duration_ms) : "N/A"}</div>
-        <div class="col bg-secondary-subtle border border-light">${(next3Bus) ? formatTime(next3Bus.duration_ms) : "N/A"}</div>
+        <div class="col text-light py-1 bg-secondary border border-light">${bus.no}</div>
+        <div class="col text-light py-1 bg-secondary border border-light">${(nextBus) ? formatTime(nextBus.duration_ms) : "N/A"}</div>
+        <div class="col text-light py-1 bg-secondary border border-light">${(next2Bus) ? formatTime(next2Bus.duration_ms) : "N/A"}</div>
+        <div class="col text-light py-1 bg-secondary border border-light">${(next3Bus) ? formatTime(next3Bus.duration_ms) : "N/A"}</div>
       </div>
     `);
   }
