@@ -3,36 +3,10 @@ const busArrivalInfo = document.getElementById("bus-arrival-info");
 const busStopNumber = document.getElementById("bus-stop-number");
 const busNumberDropdown = document.getElementById("bus-number-dropdown");
 const busNotFound = document.getElementById("bus-not-found");
-const idAutocomplete = document.getElementById("id-autocomplete");
+
 let busStopId;
 let filteredBusNo;
-let busStopIds = [];
-let idCounter = 0;
-let currentFocus = -1;
-
-// Get bus stop IDs from the API
-async function getBusStopData() {
-  const response = await fetch("https://data.busrouter.sg/v1/stops.min.json");
-  const data = await response.json();
-
-  return data;
-}
-
-// Store bus stop IDs in an array
-function storeBusStopIds(busStopData) {
-  const busStopIds = Object.keys(busStopData);
-
-  return busStopIds;
-}
-
-// Get bus stop IDs from API and store in array
-getBusStopData()
-.then(busStopData => {
-  busStopIds = storeBusStopIds(busStopData);
-})
-.catch(error => {
-  console.error(error);
-});
+let currentFocus;
 
 // Fetch bus arrival data from API based on user's input
 async function getArrivalData(busStopId) {
@@ -160,14 +134,107 @@ function clearFilter() {
   displayArrivalData(busStopId);
 }
 
-// Autocomplete bus stop ID
+// Get bus stop IDs from the API
+async function getBusStopData() {
+  const response = await fetch("https://data.busrouter.sg/v1/stops.min.json");
+  const data = await response.json();
+
+  return data;
+}
+
+// Store bus stop IDs in an array
+function storeBusStopIds(busStopData) {
+  const busStopIds = Object.keys(busStopData);
+
+  return busStopIds;
+}
+
+// Set bus stop ID to input value
 function setBusStopId(id) {
   busStopIdInput.value = id;
 }
 
+// Autocomplete bus stop ID
+function autocomplete() {
+  const idAutocomplete = document.getElementById("id-autocomplete");
+  let idCounter;
+  let busStopIds = [];
+
+  // Get bus stop IDs from API and store in array
+  getBusStopData()
+  .then(busStopData => {
+    busStopIds = storeBusStopIds(busStopData);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+
+  // Handle input event for bus stop ID
+  busStopIdInput.addEventListener("input", (e) => {
+    value = e.target.value;
+
+    // Set initial value
+    idAutocomplete.innerHTML = "";
+    idCounter = 0;
+    currentFocus = -1;
+
+    // Hide autocomplete dropdown if input is empty
+    if (!value) {
+      idAutocomplete.style.display = "none";
+      return;
+    }
+
+    // Add autocomplete dropdown item if input matches valid bus stop ID
+    for (const id of busStopIds) {
+      // Limit dropdown item to first 10 bus stop ID
+      if (id.substr(0, value.length) === value && idCounter < 10) {
+        idAutocomplete.innerHTML += `<li><button class="autocomplete-btn" onclick="setBusStopId('${id}')">${id}</button></li>`;
+        idCounter++;
+      }
+    }
+
+    // Show autocomplete dropdown if dropdown item existed
+    if (idAutocomplete.hasChildNodes()) {
+      idAutocomplete.style.display = "block";
+    }
+  });
+
+  // Handle keydown event for autocomplete dropdown
+  busStopIdInput.addEventListener("keydown", (e) => {
+    // Move active item upward if up arrow key is pressed
+    if (e.key === "ArrowUp") {
+      currentFocus--;
+
+      addActive(idAutocomplete);
+    }
+    // Move active item downward if down arrow key is pressed
+    else if (e.key === "ArrowDown") {
+      currentFocus++;
+
+      addActive(idAutocomplete);
+    }
+    // Select active item if enter key is pressed and search for bus arrival time
+    else if (e.key === "Enter") {
+      e.preventDefault;
+
+      // Check if user selected a bus stop ID from autocomplete dropdown
+      if (currentFocus >= 0) {
+        idAutocomplete.children[currentFocus].children[0].click();
+      }
+      idAutocomplete.style.display = "none";
+      searchBusInfo();
+    }
+  });
+
+  // Hide autocomplete dropdown when user clicks outside of it
+  document.addEventListener("click", () => {
+    idAutocomplete.style.display = "none";
+  });
+}
+
 // Add background color to active dropdown item
-function addActive() {
-  removeActive();
+function addActive(idAutocomplete) {
+  removeActive(idAutocomplete);
 
   if (currentFocus >= idAutocomplete.childElementCount) {
     currentFocus = 0;
@@ -182,7 +249,7 @@ function addActive() {
 }
 
 // Remove background color from dropdown item
-function removeActive() {
+function removeActive(idAutocomplete) {
   for (const child of idAutocomplete.children) {
     child.children[0].classList.remove("active");
   }
@@ -204,66 +271,5 @@ function currentTime() {
   }, 1000);
 }
 
+autocomplete();
 currentTime();
-
-// Handle input event for bus stop ID
-busStopIdInput.addEventListener("input", (e) => {
-  value = e.target.value;
-
-  // Set initial value
-  idAutocomplete.innerHTML = "";
-  idCounter = 0;
-  currentFocus = -1;
-
-  // Hide autocomplete dropdown if input is empty
-  if (!value) {
-    idAutocomplete.style.display = "none";
-    return;
-  }
-
-  // Add autocomplete dropdown item if input matches valid bus stop ID
-  for (const id of busStopIds) {
-    // Limit dropdown item to first 10 bus stop ID
-    if (id.substr(0, value.length) === value && idCounter < 10) {
-      idAutocomplete.innerHTML += `<li><button class="autocomplete-btn" onclick="setBusStopId('${id}')">${id}</button></li>`;
-      idCounter++;
-    }
-  }
-
-  // Show autocomplete dropdown if dropdown item existed
-  if (idAutocomplete.hasChildNodes()) {
-    idAutocomplete.style.display = "block";
-  }
-});
-
-// Handle keydown event for autocomplete dropdown
-busStopIdInput.addEventListener("keydown", (e) => {
-  // Move active item upward if up arrow key is pressed
-  if (e.key === "ArrowUp") {
-    currentFocus--;
-    
-    addActive();
-  }
-  // Move active item downward if down arrow key is pressed
-  else if (e.key === "ArrowDown") {
-    currentFocus++;
-
-    addActive();
-  }
-  // Select active item if enter key is pressed and search for bus arrival time
-  else if (e.key === "Enter") {
-    e.preventDefault;
-    
-    // Check if user selected a bus stop ID from autocomplete dropdown
-    if (currentFocus >= 0) {
-      idAutocomplete.children[currentFocus].children[0].click();
-    }
-    idAutocomplete.style.display = "none";
-    searchBusInfo();
-  }
-});
-
-// Hide autocomplete dropdown when user clicks outside of it
-document.addEventListener("click", () => {
-  idAutocomplete.style.display = "none";
-});
