@@ -18,6 +18,8 @@
       <div class="row mb-2">
         <div class="col-auto">
           <input autofocus class="form-control" id="bus-stop-id" placeholder="Bus Stop No." type="text">
+          <ul id="id-autocomplete">
+          </ul>
         </div>
         <div class="col-auto">
           <button class="btn btn-primary" onclick="searchBusInfo()" type="submit">Search</button>
@@ -34,7 +36,7 @@
         </div>
         <div class="col-6 col-md-4 col-xl-3">
           <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-outline-secondary btn-disabled dropdown-toggle" disabled type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Filter by Bus No.
             </button>
             <ul class="dropdown-menu" id="bus-number-dropdown">
@@ -43,14 +45,14 @@
           </div>
         </div>
         <div class="col-6 col-md-4 col-xl-3">
-          <button class="btn" onclick="resetFilter()" type="reset">Reset Filter</button>
+          <button class="btn btn-disabled" disabled onclick="clearFilter()" type="reset">Clear Filter</button>
         </div>
       </div>
       <div class="row">
-        <div class="col fw-bold border">Bus No.</div>
-        <div class="col fw-bold border">Next Bus (ETA)</div>
-        <div class="col fw-bold border">Next 2nd Bus (ETA)</div>
-        <div class="col fw-bold border">Next 3rd Bus (ETA)</div>
+        <div class="col bg-primary-subtle fw-bold border">Bus No.</div>
+        <div class="col bg-primary-subtle fw-bold border">Next Bus (ETA)</div>
+        <div class="col bg-primary-subtle fw-bold border">Next 2nd Bus (ETA)</div>
+        <div class="col bg-primary-subtle fw-bold border">Next 3rd Bus (ETA)</div>
       </div>
       <div id="bus-arrival-info"></div> 
     </div>

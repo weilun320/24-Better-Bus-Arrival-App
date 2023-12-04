@@ -1,4 +1,31 @@
-html {
-  height: 100%;
+#bus-stop-id {
+  position: relative;
+}
+
+#id-autocomplete {
+  border-radius: 8px;
+  display: none;
+  padding: 0;
+  position: absolute;
+  z-index: 5;
+}
+
+#id-autocomplete li {
+  background-color: #fff;
+  border: 1px solid #c8c8c8;
+  list-style-type: none;
+  width: 100px;
+}
+
+#id-autocomplete li button {
+  background-color: #fff;
+  border: none;
+  padding: 8px;
+  text-align: left;
   width: 100%;
+}
+
+#id-autocomplete li button:hover,
+.active {
+  background-color: #c8c8c8 !important;
 }
